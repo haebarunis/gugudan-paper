@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>구구단 학습지 무한 생성기</title>
+    <style>
+        body { font-family: 'Nanum Gothic', sans-serif; background: #f0f0f0; margin: 0; padding: 20px; }
+        .page { width: 210mm; min-height: 297mm; padding: 20mm; margin: 10px auto; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); box-sizing: border-box; page-break-after: always; }
+        .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 30px; }
+        .info { text-align: right; margin-bottom: 20px; font-size: 1.1rem; }
+        .section-title { font-size: 1.2rem; font-weight: bold; margin: 20px 0 10px 0; background: #eee; padding: 5px 10px; border-radius: 5px; }
+        .quiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .quiz-item { font-size: 1.3rem; padding: 10px; border-bottom: 1px dashed #ccc; }
+        .visual-quiz { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; border-radius: 10px; }
+        .visual-img { background: #f9f9f9; padding: 10px; border-radius: 5px; font-size: 0.9rem; color: #666; width: 150px; text-align: center; }
+        .footer { text-align: center; margin-top: 50px; font-style: italic; color: #888; }
+        @media print {
+            body { background: white; padding: 0; }
+            .no-print { display: none; }
+            .page { margin: 0; box-shadow: none; }
+        }
+        button { position: fixed; top: 20px; right: 20px; padding: 15px 30px; background: #ff9800; color: white; border: none; border-radius: 10px; font-size: 1.1rem; cursor: pointer; z-index: 100; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <button class="no-print" onclick="window.print()">🖨️ 학습지 10장 인쇄하기</button>
+
+    <div id="content"></div>
+
+    <script>
+        const content = document.getElementById('content');
+
+        function createPage(pageNumber) {
+            const page = document.createElement('div');
+            page.className = 'page';
+            
+            // 문제 생성 (중복 방지용 간단한 셋)
+            let problems = [];
+            while(problems.length < 10) {
+                let n1 = Math.floor(Math.random() * 8) + 2;
+                let n2 = Math.floor(Math.random() * 9) + 1;
+                let str = `${n1} × ${n2} = (     )`;
+                if(!problems.includes(str)) problems.push(str);
+            }
+
+            const visualN1 = Math.floor(Math.random() * 4) + 2; // 묶음 당 개수
+            const visualN2 = Math.floor(Math.random() * 3) + 2; // 묶음 수
+
+            page.innerHTML = `
+                <div class="header">
+                    <h1>📝 도전! 구구단 마스터 (제 ${pageNumber}호)</h1>
+                </div>
+                <div class="info">
+                    ____학년 ____반 ____번  이름: ____________
+                </div>
+                
+                <div class="section-title">1. 빈칸에 알맞은 정답을 적어보세요.</div>
+                <div class="quiz-grid">
+                    ${problems.map(p => `<div class="quiz-item">${p}</div>`).join('')}
+                </div>
+
+                <div class="section-title">2. 원리 이해하기 (묶음셈)</div>
+                <div class="visual-quiz">
+                    <div class="visual-img">🍎 사과 그림 영역<br>(한 묶음에 ${visualN1}개씩 ${visualN2}묶음)</div>
+                    <div>
+                        한 묶음에 사과가 ( &nbsp;&nbsp; )개씩 있습니다.<br>
+                        모두 ( &nbsp;&nbsp; )묶음이 있습니다.<br><br>
+                        <b>곱셈식: ( &nbsp;&nbsp; ) × ( &nbsp;&nbsp; ) = ( &nbsp;&nbsp; )</b>
+                    </div>
+                </div>
+
+                <div class="section-title">3. 거꾸로 구구단 (빈칸 채우기)</div>
+                <div class="quiz-grid">
+                    <div class="quiz-item">( &nbsp;&nbsp; ) × ( &nbsp;&nbsp; ) = 12</div>
+                    <div class="quiz-item">( &nbsp;&nbsp; ) × ( &nbsp;&nbsp; ) = 24</div>
+                </div>
+
+                <div class="footer">
+                    "오늘도 포기하지 않고 끝까지 풀어낸 여러분이 자랑스러워요!"
+                </div>
+            `;
+            content.appendChild(page);
+        }
+
+        // 10장 생성
+        for(let i=1; i<=10; i++) {
+            createPage(i);
+        }
+    </script>
+</body>
+</html>
